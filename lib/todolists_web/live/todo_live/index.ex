@@ -40,6 +40,21 @@ defmodule TodolistsWeb.TodoLive.Index do
     {:noreply, assign(socket, :todos, list_todos())}
   end
 
+  def handle_event("toggle", %{"id" => id} = params, socket) do
+    IO.inspect params
+    todo = TodoLists.get_todo!(id)
+    update_response = 
+      TodoLists.update_todo(todo, %{done: !todo.done})
+    case update_response do
+      {:ok, _todo} -> 
+        socket = assign(socket, :todos, list_todos())
+      {:error, changeset} ->
+        socket 
+         |> put_flash(:error, "Error: #{changeset.errors}")
+    end
+    {:noreply, socket}
+  end
+
   defp list_todos do
     TodoLists.list_todos()
   end

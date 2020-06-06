@@ -24,7 +24,16 @@
       <tr id="todo-<%= todo.id %>">
         <td><%= todo.list_id %></td>
         <td><%= todo.text %></td>
-        <td><%= todo.done %></td>
+        <td>
+          <input type="hidden" name="todo[done]" value="<%= todo.done %>" />
+          <input type="checkbox" 
+            phx-click="toggle"
+            phx-value-id="<%= todo.id %>"
+            id="todo_done"
+            name="todo[done]" 
+            value="<%= todo.done %>"
+           <%= if todo.done, do: "checked" %>/>
+        </td>
 
         <td>
           <span><%= live_redirect "Show", to: Routes.todo_show_path(@socket, :show, todo) %></span>
