@@ -56,7 +56,6 @@ defmodule TodolistsWeb.TodoLive.Index do
   end
 
   def handle_event("toggle", %{"id" => id, "list_id" => list_id} = params, socket) do
-    # IO.inspect params
     todo = TodoLists.get_todo!(id)
     update_response = 
       TodoLists.update_todo(todo, %{done: !todo.done})
@@ -67,6 +66,12 @@ defmodule TodolistsWeb.TodoLive.Index do
         socket 
          |> put_flash(:error, "Error: #{changeset.errors}")
     end
+
+    if list_completed?(list_id) do # TODO async
+      # TODO fine-tune this
+      # Todolists.Mailer.send_completion_notification("josef.richter@me.com")  
+    end
+
     {:noreply, socket}
   end
 
@@ -77,4 +82,10 @@ defmodule TodolistsWeb.TodoLive.Index do
   defp list_todos(list_id) do
     TodoLists.list_todos(list_id)
   end
+
+  defp list_completed?(list_id) do
+    TodoLists.list_todos(list_id)
+    |> Enum.all?(&(&1.done)) # checks if all true https://hexdocs.pm/elixir/Enum.html#all?/2
+  end
+
 end
