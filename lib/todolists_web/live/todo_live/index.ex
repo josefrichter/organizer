@@ -13,6 +13,16 @@ defmodule TodolistsWeb.TodoLive.Index do
     {:ok, socket}
   end
 
+  # match no slug -> create one
+  def mount(%{}, _session, socket) do
+    new_list_id = MnemonicSlugs.generate_slug(3)
+    socket = 
+      socket 
+      |> assign(:list_id, new_list_id)
+      |> assign(:todos, list_todos(new_list_id)) # shall be always empty
+    {:ok, push_redirect(socket, to: "/#{new_list_id}")}
+  end
+
   @impl true
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}

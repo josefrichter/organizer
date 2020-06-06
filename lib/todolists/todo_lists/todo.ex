@@ -3,9 +3,9 @@ defmodule Todolists.TodoLists.Todo do
   import Ecto.Changeset
 
   schema "todos" do
-    field :done, :boolean, default: false
     field :list_id, :string
     field :text, :string
+    field :done, :boolean, default: false
 
     timestamps()
   end

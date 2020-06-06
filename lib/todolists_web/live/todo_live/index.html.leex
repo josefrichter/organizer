@@ -12,8 +12,7 @@
 <table>
   <thead>
     <tr>
-      <th>List</th>
-      <th>Text</th>
+      <th>Todo</th>
       <th>Done</th>
 
       <th></th>
@@ -22,7 +21,6 @@
   <tbody id="todos">
     <%= for todo <- @todos do %>
       <tr id="todo-<%= todo.id %>">
-        <td><%= todo.list_id %></td>
         <td><%= todo.text %></td>
         <td>
           <input type="hidden" name="todo[done]" value="<%= todo.done %>" />

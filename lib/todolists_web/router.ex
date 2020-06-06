@@ -19,7 +19,7 @@ defmodule TodolistsWeb.Router do
 
     # live "/", PageLive, :index
 
-    live "/", TodoLive.IndexAll, :index
+    live "/", TodoLive.Index, :index # no slug -> create
 
     live "/:list_id/", TodoLive.Index, :index
 
