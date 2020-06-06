@@ -6,7 +6,7 @@
     title: @page_title,
     action: @live_action,
     todo: @todo,
-    return_to: Routes.todo_index_path(@socket, :index) %>
+    return_to: Routes.todo_index_path(@socket, :index, @list_id) %>
 <% end %>
 
 <table>
@@ -29,6 +29,7 @@
           <input type="checkbox" 
             phx-click="toggle"
             phx-value-id="<%= todo.id %>"
+            phx-value-list_id="<%= todo.list_id %>"
             id="todo_done"
             name="todo[done]" 
             value="<%= todo.done %>"
@@ -36,13 +37,13 @@
         </td>
 
         <td>
-          <span><%= live_redirect "Show", to: Routes.todo_show_path(@socket, :show, todo) %></span>
-          <span><%= live_patch "Edit", to: Routes.todo_index_path(@socket, :edit, todo) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: todo.id, data: [confirm: "Are you sure?"] %></span>
+          <span><%#= live_redirect "Show", to: Routes.todo_show_path(@socket, :show, todo.list_id, todo) %></span>
+          <span><%#= live_patch "Edit", to: Routes.todo_index_path(@socket, :edit, todo.list_id, todo) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: todo.id, phx_value_listid: todo.list_id, data: [confirm: "Are you sure?"] %></span>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<span><%= live_patch "New Todo", to: Routes.todo_index_path(@socket, :new) %></span>
+<span><%= live_patch "New Todo", to: Routes.todo_index_path(@socket, :new, @list_id) %></span>

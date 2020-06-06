@@ -22,6 +22,23 @@ defmodule Todolists.TodoLists do
   end
 
   @doc """
+  Returns the list of todos belonging to given list_id.
+
+  ## Examples
+
+      iex> list_todos("foo-bar-baz")
+      [%Todo{}, ...]
+
+  """
+  def list_todos(list_id) do
+    query = from t in Todo,
+    where: t.list_id == ^list_id,
+    order_by: [asc: t.inserted_at],
+    select: t
+    Repo.all(query)
+  end
+
+  @doc """
   Gets a single todo.
 
   Raises `Ecto.NoResultsError` if the Todo does not exist.

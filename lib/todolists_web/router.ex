@@ -17,13 +17,18 @@ defmodule TodolistsWeb.Router do
   scope "/", TodolistsWeb do
     pipe_through :browser
 
-    live "/", PageLive, :index
-    live "/todos", TodoLive.Index, :index
-    live "/todos/new", TodoLive.Index, :new
-    live "/todos/:id/edit", TodoLive.Index, :edit
+    # live "/", PageLive, :index
 
-    live "/todos/:id", TodoLive.Show, :show
-    live "/todos/:id/show/edit", TodoLive.Show, :edit
+    live "/", TodoLive.IndexAll, :index
+
+    live "/:list_id/", TodoLive.Index, :index
+
+    live "/:list_id/todos/new", TodoLive.Index, :new
+    live "/:list_id/todos/:id/edit", TodoLive.Index, :edit
+
+    live "/:list_id/todos/:id", TodoLive.Show, :show
+    live "/:list_id/todos/:id/show/edit", TodoLive.Show, :edit
+
   end
 
   # Other scopes may use custom stacks.
