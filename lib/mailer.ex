@@ -4,8 +4,8 @@ defmodule Organizer.Mailer do
         IO.puts "Sending completion email to #{email}!"
 
         body = %{
-              "FromEmail": "richter.josef+lists@gmail.com",
-              "FromName": "TodoList App",
+              "FromEmail": "richter.josef+organizer@gmail.com",
+              "FromName": "Organizer App",
               "Subject": "Todo list is complete!",
               "MJ-TemplateID": "999902",
               "MJ-TemplateLanguage": true,
