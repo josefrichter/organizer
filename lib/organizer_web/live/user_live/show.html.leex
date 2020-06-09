@@ -6,7 +6,9 @@
     title: @page_title,
     action: @live_action,
     user: @user,
-    return_to: Routes.user_show_path(@socket, :show, @user) %>
+    return_to: Routes.todo_index_path(@socket, :index, @user.list_id) 
+    # return_to: Routes.user_show_path(@socket, :show, @user) 
+    %>
 <% end %>
 
 <ul>

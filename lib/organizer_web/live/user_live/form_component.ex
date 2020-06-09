@@ -52,4 +52,21 @@ defmodule OrganizerWeb.UserLive.FormComponent do
         {:noreply, assign(socket, changeset: changeset)}
     end
   end
+
+  defp save_user(socket, :add, user_params) do
+    IO.inspect socket
+    IO.inspect user_params
+    case Lists.create_user(user_params) do
+      {:ok, _user} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "User created successfully")
+         |> push_redirect(to: socket.assigns.return_to)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
+    end
+  end
+
+
 end

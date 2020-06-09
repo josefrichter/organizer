@@ -1,12 +1,14 @@
 <h1>Listing Users</h1>
 
-<%= if @live_action in [:new, :edit] do %>
+<%= if @live_action in [:new, :add, :edit] do %>
   <%= live_modal @socket, OrganizerWeb.UserLive.FormComponent,
     id: @user.id || :new,
     title: @page_title,
     action: @live_action,
     user: @user,
-    return_to: Routes.user_index_path(@socket, :index) %>
+    return_to: Routes.todo_index_path(@socket, :index, @user.list_id) 
+    # return_to: Routes.user_index_path(@socket, :index) 
+    %>
 <% end %>
 
 <table>

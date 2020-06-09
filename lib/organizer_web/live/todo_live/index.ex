@@ -10,6 +10,7 @@ defmodule OrganizerWeb.TodoLive.Index do
       socket 
       |> assign(:todos, list_todos(list_id))
       |> assign(:list_id, list_id)
+      |> assign(:user, get_user(list_id))
     {:ok, socket}
   end
 
@@ -20,6 +21,7 @@ defmodule OrganizerWeb.TodoLive.Index do
       socket 
       |> assign(:list_id, new_list_id)
       |> assign(:todos, list_todos(new_list_id)) # shall be always empty
+      |> assign(:user, nil) # empty user
     {:ok, push_redirect(socket, to: "/#{new_list_id}")}
   end
 
@@ -59,31 +61,35 @@ defmodule OrganizerWeb.TodoLive.Index do
     todo = Lists.get_todo!(id)
     update_response = 
       Lists.update_todo(todo, %{done: !todo.done})
-    case update_response do
-      {:ok, _todo} -> 
-        socket = assign(socket, :todos, list_todos(list_id))
-      {:error, changeset} ->
-        socket 
-         |> put_flash(:error, "Error: #{changeset.errors}")
-    end
+    socket =
+      case update_response do
+        {:ok, _todo} -> 
+          socket = assign(socket, :todos, list_todos(list_id))
+        {:error, changeset} ->
+          socket 
+          |> put_flash(:error, "Error: #{changeset.errors}")
+      end
 
-        
     IO.puts "Checking if all tasks completed..."
-    if list_completed?(list_id) do
-      # TODO update variables here
-      email = "josef.richter@me.com"
-      list_url = "url/#{list_id}"
-      IO.puts "All tasks complete!"
-      # FIXME the flash message here doesn't work...
-      socket 
-        |> put_flash(:info, "All tasks complete! Sending notification to #{email}...")
-        # |> push_patch(to: "/#{list_id}") # TODO how to redirect from here?
-      IO.inspect Task.Supervisor.start_child(Organizer.TaskSupervisor, fn ->
-      # Organizer.Mailer.send_completion_notification(email, list_url)
-      end)
-    else
-      IO.puts "Nope, not yet.."
-    end  
+    socket =
+      if list_completed?(list_id) do
+        email = socket.assigns.user.email
+        # TODO app url
+        list_url = "url/#{list_id}"
+        IO.puts "All tasks complete!"
+        # FIXME the flash message here doesn't work...
+        socket 
+          |> put_flash(:info, "All tasks complete! Sending notification to #{email}...")
+          # |> push_redirect(to: "/#{list_id}") # TODO how to redirect from here?
+        IO.inspect Task.Supervisor.start_child(Organizer.TaskSupervisor, fn ->
+          IO.puts "Sending to #{email} from within a Task"
+        # Organizer.Mailer.send_completion_notification(email, list_url)
+        end)
+        socket
+      else
+        IO.puts "Nope, not yet.."
+        socket
+      end  
     
 
     {:noreply, socket}
@@ -95,6 +101,10 @@ defmodule OrganizerWeb.TodoLive.Index do
 
   defp list_todos(list_id) do
     Lists.list_todos(list_id)
+  end
+
+  defp get_user(list_id) do
+    Lists.get_user_by_list_id(list_id)
   end
 
   defp list_completed?(list_id) do

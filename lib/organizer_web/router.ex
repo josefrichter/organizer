@@ -47,6 +47,8 @@ defmodule OrganizerWeb.Router do
 
     live "/:list_id/", TodoLive.Index, :index
 
+    live "/:list_id/add_user", UserLive.Index, :add
+
     live "/:list_id/todos/new", TodoLive.Index, :new
     live "/:list_id/todos/:id/edit", TodoLive.Index, :edit
 

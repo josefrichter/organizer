@@ -6,8 +6,15 @@ defmodule OrganizerWeb.UserLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :users, list_users())}
+    IO.inspect socket
+    socket =
+      assign(socket, :users, list_users())
+    {:ok, socket}
   end
+
+  # def mount(_params, _session, socket) do
+  #   {:ok, assign(socket, :users, list_users())}
+  # end
 
   @impl true
   def handle_params(params, _url, socket) do
@@ -20,10 +27,20 @@ defmodule OrganizerWeb.UserLive.Index do
     |> assign(:user, Lists.get_user!(id))
   end
 
-  defp apply_action(socket, :new, _params) do
+  defp apply_action(socket, :new, params) do
+    # IO.inspect socket.assigns
+    # IO.inspect params
     socket
     |> assign(:page_title, "New User")
     |> assign(:user, %User{})
+  end
+
+  defp apply_action(socket, :add, %{"list_id" => list_id} = params) do
+    # IO.inspect socket.assigns
+    IO.inspect params
+    socket
+    |> assign(:page_title, "New User")
+    |> assign(:user, %User{list_id: list_id})
   end
 
   defp apply_action(socket, :index, _params) do

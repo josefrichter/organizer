@@ -7,6 +7,7 @@ defmodule Organizer.Lists do
   alias Organizer.Repo
 
   alias Organizer.Lists.Todo
+  alias Organizer.Lists.User
 
   @doc """
   Returns the list of todos.
@@ -32,9 +33,9 @@ defmodule Organizer.Lists do
   """
   def list_todos(list_id) do
     query = from t in Todo,
-    where: t.list_id == ^list_id,
-    order_by: [asc: t.inserted_at],
-    select: t
+      where: t.list_id == ^list_id,
+      order_by: [asc: t.inserted_at],
+      select: t
     Repo.all(query)
   end
 
@@ -149,6 +150,28 @@ defmodule Organizer.Lists do
 
   """
   def get_user!(id), do: Repo.get!(User, id)
+
+  @doc """
+  Gets a single user by list_id.
+
+  Raises `Ecto.NoResultsError` if the User does not exist.
+
+  ## Examples
+
+      iex> get_user_by_list_id!("list-id-exists")
+      %User{}
+
+      iex> get_user_by_list_id!("nonexistent-list-id")
+      ** (Ecto.NoResultsError)
+
+  """
+  
+  def get_user_by_list_id(list_id) do
+    query = from u in User, 
+      where: u.list_id == ^list_id, 
+      select: u
+    Repo.one(query) # just first match, to keep it simple
+  end
 
   @doc """
   Creates a user.

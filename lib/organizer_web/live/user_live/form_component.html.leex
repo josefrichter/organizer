@@ -6,12 +6,13 @@
   phx_change: "validate",
   phx_submit: "save" %>
 
-  <%= label f, :list_id %>
-  <%= text_input f, :list_id %>
-  <%= error_tag f, :list_id %>
+  <%#= label f, :list_id %>
+  <%#= text_input f, :list_id %>
+  <%= hidden_input f, :list_id %>
+  <%#= error_tag f, :list_id %>
 
   <%= label f, :email %>
-  <%= text_input f, :email %>
+  <%= email_input f, :email %>
   <%= error_tag f, :email %>
 
   <%= submit "Save", phx_disable_with: "Saving..." %>

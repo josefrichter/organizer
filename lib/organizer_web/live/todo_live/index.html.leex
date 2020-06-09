@@ -45,3 +45,9 @@
 </table>
 
 <span><%= live_patch "New Todo", to: Routes.todo_index_path(@socket, :new, @list_id) %></span>
+
+<%= if @user do %> 
+  <span>&nbsp;&nbsp;Notify someone when all completed: <%= @user.email %> <%= live_patch "Edit", to: Routes.user_show_path(@socket, :edit, @user.id) %></span>
+<% else %>
+  <span>&nbsp;&nbsp;Notify someone when all completed <%= live_patch "Add email", to: Routes.user_index_path(@socket, :add, @list_id) %></span>
+<% end %>
