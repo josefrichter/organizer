@@ -1,18 +1,19 @@
 defmodule Todolists.Mailer do
 
     def send_completion_notification(email \\ "", list_url \\ "") do
+        IO.puts "Sending completion email to #{email}!"
 
         body = %{
-              "FromEmail": "todolist@gmail.com",
+              "FromEmail": "richter.josef+todolists@gmail.com",
               "FromName": "TodoList App",
               "Subject": "Todo list is complete!",
               "MJ-TemplateID": "999902",
               "MJ-TemplateLanguage": true,
-              "Vars": %{"name": "Alice"},
+              "Vars": %{"name": "Todo"},
               "Recipients": [%{"Email": email}]
             }
 
-        Mailjex.Delivery.send(body)
+        IO.inspect Mailjex.Delivery.send(body)
 
     end
 

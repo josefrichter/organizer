@@ -67,10 +67,24 @@ defmodule TodolistsWeb.TodoLive.Index do
          |> put_flash(:error, "Error: #{changeset.errors}")
     end
 
-    if list_completed?(list_id) do # TODO async
-      # TODO fine-tune this
-      # Todolists.Mailer.send_completion_notification("josef.richter@me.com")  
-    end
+        
+    IO.puts "Checking if all tasks completed..."
+    if list_completed?(list_id) do
+      # TODO update variables here
+      email = "josef.richter@me.com"
+      list_url = "url/#{list_id}"
+      IO.puts "All tasks complete!"
+      # FIXME the flash message here doesn't work...
+      socket 
+        |> put_flash(:info, "All tasks complete! Sending notification to #{email}...")
+        # |> push_patch(to: "/#{list_id}") # TODO how to redirect from here?
+      IO.inspect Task.Supervisor.start_child(Todolists.TaskSupervisor, fn ->
+      # Todolists.Mailer.send_completion_notification(email, list_url)
+      end)
+    else
+      IO.puts "Nope, not yet.."
+    end  
+    
 
     {:noreply, socket}
   end

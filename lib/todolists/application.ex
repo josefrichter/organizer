@@ -14,9 +14,10 @@ defmodule Todolists.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Todolists.PubSub},
       # Start the Endpoint (http/https)
-      TodolistsWeb.Endpoint
+      TodolistsWeb.Endpoint,
       # Start a worker by calling: Todolists.Worker.start_link(arg)
       # {Todolists.Worker, arg}
+      {Task.Supervisor, name: Todolists.TaskSupervisor}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
