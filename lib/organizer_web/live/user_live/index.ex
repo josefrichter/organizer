@@ -35,14 +35,6 @@ defmodule OrganizerWeb.UserLive.Index do
     |> assign(:user, %User{})
   end
 
-  defp apply_action(socket, :add, %{"list_id" => list_id} = params) do
-    # IO.inspect socket.assigns
-    IO.inspect params
-    socket
-    |> assign(:page_title, "New User")
-    |> assign(:user, %User{list_id: list_id})
-  end
-
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Users")

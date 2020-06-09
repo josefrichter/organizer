@@ -9,6 +9,18 @@
     return_to: Routes.todo_index_path(@socket, :index, @list_id) %>
 <% end %>
 
+<%= if @live_action in [:add_user, :edit_user] do %>
+  <%= live_modal @socket, OrganizerWeb.UserLive.FormComponent,
+    id: @user.id || :new,
+    title: @page_title,
+    action: @live_action,
+    user: @user,
+    list_id: @list_id,
+    return_to: Routes.todo_index_path(@socket, :index, @list_id) 
+    # return_to: Routes.user_index_path(@socket, :index) 
+    %>
+<% end %>
+
 <table>
   <thead>
     <tr>
@@ -46,8 +58,8 @@
 
 <span><%= live_patch "New Todo", to: Routes.todo_index_path(@socket, :new, @list_id) %></span>
 
-<%= if @user do %> 
-  <span>&nbsp;&nbsp;Notify someone when all completed: <%= @user.email %> <%= live_patch "Edit", to: Routes.user_show_path(@socket, :edit, @user.id) %></span>
+<%= if @user && @user.id do %> 
+  <span>&nbsp;&nbsp;Notify someone when all completed: <%= @user.email %> <%= live_patch "Edit", to: Routes.todo_index_path(@socket, :edit_user, @list_id, @user.id) %></span>
 <% else %>
-  <span>&nbsp;&nbsp;Notify someone when all completed <%= live_patch "Add email", to: Routes.user_index_path(@socket, :add, @list_id) %></span>
+  <span>&nbsp;&nbsp;Notify someone when all completed <%= live_patch "Add email", to: Routes.todo_index_path(@socket, :add_user, @list_id) %></span>
 <% end %>

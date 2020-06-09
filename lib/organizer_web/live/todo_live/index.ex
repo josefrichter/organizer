@@ -3,6 +3,7 @@ defmodule OrganizerWeb.TodoLive.Index do
 
   alias Organizer.Lists
   alias Organizer.Lists.Todo
+  alias Organizer.Lists.User
 
   @impl true
   def mount(%{"list_id" => list_id}, _session, socket) do
@@ -40,6 +41,21 @@ defmodule OrganizerWeb.TodoLive.Index do
     socket
     |> assign(:page_title, "New Todo")
     |> assign(:todo, %Todo{list_id: list_id})
+  end
+
+  defp apply_action(socket, :add_user, %{"list_id" => list_id} = params) do
+    socket
+    |> assign(:page_title, "Add User")
+    |> assign(:user, %User{list_id: list_id})
+    |> assign(:list_id, list_id)
+  end
+
+  defp apply_action(socket, :edit_user, %{"id" => id} = params) do
+    IO.inspect id
+    IO.inspect Lists.get_user!(id)
+    socket
+    |> assign(:page_title, "Edit User")
+    |> assign(:user, Lists.get_user!(id))
   end
 
   defp apply_action(socket, :index, _params) do
