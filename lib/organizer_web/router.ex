@@ -33,6 +33,14 @@ defmodule OrganizerWeb.Router do
   scope "/", OrganizerWeb do
     pipe_through :browser
 
+    # TODO remove once not needed
+    live "/users", UserLive.Index, :index
+    live "/users/new", UserLive.Index, :new
+    live "/users/:id/edit", UserLive.Index, :edit
+
+    live "/users/:id", UserLive.Show, :show
+    live "/users/:id/show/edit", UserLive.Show, :edit
+
     # live "/", PageLive, :index
 
     live "/", TodoLive.Index, :index # no slug -> create

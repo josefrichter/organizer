@@ -65,4 +65,65 @@ defmodule Organizer.ListsTest do
       assert %Ecto.Changeset{} = Lists.change_todo(todo)
     end
   end
+
+  describe "users" do
+    alias Organizer.Lists.User
+
+    @valid_attrs %{email: "some email", list_id: "some list_id"}
+    @update_attrs %{email: "some updated email", list_id: "some updated list_id"}
+    @invalid_attrs %{email: nil, list_id: nil}
+
+    def user_fixture(attrs \\ %{}) do
+      {:ok, user} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Lists.create_user()
+
+      user
+    end
+
+    test "list_users/0 returns all users" do
+      user = user_fixture()
+      assert Lists.list_users() == [user]
+    end
+
+    test "get_user!/1 returns the user with given id" do
+      user = user_fixture()
+      assert Lists.get_user!(user.id) == user
+    end
+
+    test "create_user/1 with valid data creates a user" do
+      assert {:ok, %User{} = user} = Lists.create_user(@valid_attrs)
+      assert user.email == "some email"
+      assert user.list_id == "some list_id"
+    end
+
+    test "create_user/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Lists.create_user(@invalid_attrs)
+    end
+
+    test "update_user/2 with valid data updates the user" do
+      user = user_fixture()
+      assert {:ok, %User{} = user} = Lists.update_user(user, @update_attrs)
+      assert user.email == "some updated email"
+      assert user.list_id == "some updated list_id"
+    end
+
+    test "update_user/2 with invalid data returns error changeset" do
+      user = user_fixture()
+      assert {:error, %Ecto.Changeset{}} = Lists.update_user(user, @invalid_attrs)
+      assert user == Lists.get_user!(user.id)
+    end
+
+    test "delete_user/1 deletes the user" do
+      user = user_fixture()
+      assert {:ok, %User{}} = Lists.delete_user(user)
+      assert_raise Ecto.NoResultsError, fn -> Lists.get_user!(user.id) end
+    end
+
+    test "change_user/1 returns a user changeset" do
+      user = user_fixture()
+      assert %Ecto.Changeset{} = Lists.change_user(user)
+    end
+  end
 end
