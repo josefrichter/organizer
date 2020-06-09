@@ -1,10 +1,10 @@
 use Mix.Config
 
 # Configure your database
-config :todolists, Todolists.Repo,
+config :organizer, Organizer.Repo,
   username: "postgres",
   password: "postgres",
-  database: "todolists_dev",
+  database: "organizer_dev",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -15,7 +15,7 @@ config :todolists, Todolists.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :todolists, TodolistsWeb.Endpoint,
+config :organizer, OrganizerWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -55,13 +55,13 @@ config :todolists, TodolistsWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :todolists, TodolistsWeb.Endpoint,
+config :organizer, OrganizerWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/todolists_web/(live|views)/.*(ex)$",
-      ~r"lib/todolists_web/templates/.*(eex)$"
+      ~r"lib/organizer_web/(live|views)/.*(ex)$",
+      ~r"lib/organizer_web/templates/.*(eex)$"
     ]
   ]
 

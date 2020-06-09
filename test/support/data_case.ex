@@ -1,4 +1,4 @@
-defmodule Todolists.DataCase do
+defmodule Organizer.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -10,7 +10,7 @@ defmodule Todolists.DataCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use Todolists.DataCase, async: true`, although
+  by setting `use Organizer.DataCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -18,20 +18,20 @@ defmodule Todolists.DataCase do
 
   using do
     quote do
-      alias Todolists.Repo
+      alias Organizer.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import Todolists.DataCase
+      import Organizer.DataCase
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Todolists.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Organizer.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Todolists.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Organizer.Repo, {:shared, self()})
     end
 
     :ok

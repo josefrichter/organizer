@@ -1,4 +1,4 @@
-defmodule TodolistsWeb.ChannelCase do
+defmodule OrganizerWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -11,7 +11,7 @@ defmodule TodolistsWeb.ChannelCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use TodolistsWeb.ChannelCase, async: true`, although
+  by setting `use OrganizerWeb.ChannelCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -21,18 +21,18 @@ defmodule TodolistsWeb.ChannelCase do
     quote do
       # Import conveniences for testing with channels
       import Phoenix.ChannelTest
-      import TodolistsWeb.ChannelCase
+      import OrganizerWeb.ChannelCase
 
       # The default endpoint for testing
-      @endpoint TodolistsWeb.Endpoint
+      @endpoint OrganizerWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Todolists.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Organizer.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Todolists.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Organizer.Repo, {:shared, self()})
     end
 
     :ok

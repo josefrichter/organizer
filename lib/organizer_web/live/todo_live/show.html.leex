@@ -1,0 +1,32 @@
+<h1>Show Todo</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, OrganizerWeb.TodoLive.FormComponent,
+    id: @todo.id,
+    title: @page_title,
+    action: @live_action,
+    todo: @todo,
+    return_to: Routes.todo_show_path(@socket, :show, @todo) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>List:</strong>
+    <%= @todo.list_id %>
+  </li>
+
+  <li>
+    <strong>Text:</strong>
+    <%= @todo.text %>
+  </li>
+
+  <li>
+    <strong>Done:</strong>
+    <%= @todo.done %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.todo_show_path(@socket, :edit, @todo), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.todo_index_path(@socket, :index) %></span>

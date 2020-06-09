@@ -1,9 +1,9 @@
-defmodule Todolists.MixProject do
+defmodule Organizer.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :todolists,
+      app: :organizer,
       version: "0.1.0",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -19,7 +19,7 @@ defmodule Todolists.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Todolists.Application, []},
+      mod: {Organizer.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

@@ -1,4 +1,4 @@
-defmodule Todolists.Repo.Migrations.AddListIdIndex do
+defmodule Organizer.Repo.Migrations.AddListIdIndex do
   use Ecto.Migration
 
   def change do

@@ -1,10 +1,10 @@
-defmodule Todolists.Mailer do
+defmodule Organizer.Mailer do
 
     def send_completion_notification(email \\ "", list_url \\ "") do
         IO.puts "Sending completion email to #{email}!"
 
         body = %{
-              "FromEmail": "richter.josef+todolists@gmail.com",
+              "FromEmail": "richter.josef+lists@gmail.com",
               "FromName": "TodoList App",
               "Subject": "Todo list is complete!",
               "MJ-TemplateID": "999902",
