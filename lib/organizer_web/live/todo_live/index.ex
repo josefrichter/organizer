@@ -91,7 +91,7 @@ defmodule OrganizerWeb.TodoLive.Index do
       if list_completed?(list_id) do
         email = socket.assigns.user.email
         # TODO app url
-        list_url = "https://organizer.gigalixir.com/#{list_id}"
+        list_url = "https://organizer.gigalixirapp.com/#{list_id}"
         IO.puts "All tasks complete!"
         # FIXME the flash message here doesn't work...
         socket 
