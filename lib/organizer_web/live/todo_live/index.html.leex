@@ -21,22 +21,13 @@
     %>
 <% end %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Todo</th>
-      <th>Done</th>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="todos">
+  <div id="todos" style="display:flex-column;">
     <%= for todo <- @todos do %>
-      <tr id="todo-<%= todo.id %>">
-        <td><%= todo.text %></td>
-        <td>
+      <div id="todo-<%= todo.id %>" style="display:flex;flex-direction:row;justify-content:space-between;align-items:baseline;">
+        <div style="flex:1; padding: 0 15px 0 5px">
           <input type="hidden" name="todo[done]" value="<%= todo.done %>" />
-          <input type="checkbox" 
+          <input type="checkbox"
+            style="transform: scale(1.75);" 
             phx-click="toggle"
             phx-value-id="<%= todo.id %>"
             phx-value-list_id="<%= todo.list_id %>"
@@ -44,22 +35,23 @@
             name="todo[done]" 
             value="<%= todo.done %>"
            <%= if todo.done, do: "checked" %>/>
-        </td>
-
-        <td>
+           &nbsp;
+        </div>
+        <div style="flex:10;"><h3 style="display: inline;"><%= todo.text %></h3></div>
+        <div style="flex:1;">
           <span><%#= live_redirect "Show", to: Routes.todo_show_path(@socket, :show, todo.list_id, todo) %></span>
           <span><%#= live_patch "Edit", to: Routes.todo_index_path(@socket, :edit, todo.list_id, todo) %></span>
           <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: todo.id, phx_value_listid: todo.list_id, data: [confirm: "Are you sure?"] %></span>
-        </td>
-      </tr>
+        </div>
+      </div>
     <% end %>
-  </tbody>
-</table>
+  </div>
 
+<br/>
 <span><%= live_patch "New Todo", to: Routes.todo_index_path(@socket, :new, @list_id) %></span>
-
+<br/><br/>
 <%= if @user && @user.id do %> 
-  <span>&nbsp;&nbsp;Notify someone when all completed: <%= @user.email %> <%= live_patch "Edit", to: Routes.todo_index_path(@socket, :edit_user, @list_id, @user.id) %></span>
+  <span>Notify someone when all completed: <%= @user.email %> <%= live_patch "Edit", to: Routes.todo_index_path(@socket, :edit_user, @list_id, @user.id) %></span>
 <% else %>
-  <span>&nbsp;&nbsp;Notify someone when all completed <%= live_patch "Add email", to: Routes.todo_index_path(@socket, :add_user, @list_id) %></span>
+  <span>Notify someone when all completed <%= live_patch "Add email", to: Routes.todo_index_path(@socket, :add_user, @list_id) %></span>
 <% end %>
