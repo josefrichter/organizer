@@ -91,7 +91,7 @@ defmodule OrganizerWeb.TodoLive.Index do
       if list_completed?(list_id) do
         email = socket.assigns.user.email
         # TODO app url
-        list_url = "url/#{list_id}"
+        list_url = "https://organizer.gigalixir.com/#{list_id}"
         IO.puts "All tasks complete!"
         # FIXME the flash message here doesn't work...
         socket 
@@ -99,7 +99,7 @@ defmodule OrganizerWeb.TodoLive.Index do
           # |> push_redirect(to: "/#{list_id}") # TODO how to redirect from here?
         IO.inspect Task.Supervisor.start_child(Organizer.TaskSupervisor, fn ->
           IO.puts "Sending to #{email} from within a Task"
-        # Organizer.Mailer.send_completion_notification(email, list_url)
+          Organizer.Mailer.send_completion_notification(email, list_url)
         end)
         socket
       else
