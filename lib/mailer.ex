@@ -3,7 +3,7 @@ defmodule Organizer.Mailer do
     def send_completion_notification(email \\ "", list_url \\ "") do
         IO.puts "Sending completion email to #{email}!"
 
-        body = %{
+        IO.inspect body = %{
               "FromEmail": "richter.josef+organizer@gmail.com",
               "FromName": "Organizer App",
               "Subject": "Todo list is complete!",
