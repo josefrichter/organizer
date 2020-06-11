@@ -89,28 +89,30 @@ defmodule OrganizerWeb.TodoLive.Index do
       end
 
     IO.puts "Checking if all tasks completed..."
-    socket =
-      if list_completed?(list_id) do
-        email = socket.assigns.user.email
-        # TODO app url
-        list_url = "https://organizer.gigalixirapp.com/#{list_id}"
-        IO.puts "All tasks complete!"
-        # FIXME the flash message here doesn't work...
-        socket = 
-          socket 
-            |> put_flash(:info, "All tasks complete! Sending notification to #{email}...")
-        IO.inspect Task.Supervisor.start_child(Organizer.TaskSupervisor, fn ->
-          IO.puts "Sending to #{email} from within a Task"
-          Organizer.Mailer.send_completion_notification(email, list_url)
-        end)
-        socket
-      else
-        IO.puts "Nope, not yet.."
-        socket
-      end  
-    
+    if (socket.assigns.user && list_completed?(socket.assigns.list_id)) do
+      email = socket.assigns.user.email
+      list_id = socket.assigns.list_id
+
+      send_completion_notification(email, list_id)
+
+      IO.puts "All tasks complete!"
+
+      put_flash(socket, :info, "All tasks complete! Sending notification to #{email}...")
+    else
+      IO.puts "Nope, either no user, or list not complete yet..."
+
+      socket
+    end 
 
     {:noreply, socket}
+  end
+
+  defp send_completion_notification(email, list_id) do
+    Task.Supervisor.start_child(Organizer.TaskSupervisor, fn ->
+      IO.puts "Sending to #{email} from within a Task"
+      list_url = "https://organizer.gigalixirapp.com/#{list_id}"
+      Organizer.Mailer.send_completion_notification(email, list_url)
+    end)
   end
 
   def handle_info(:clear_flash, socket) do
