@@ -27,18 +27,18 @@ defmodule OrganizerWeb.TodoLive.FormComponent do
     save_todo(socket, socket.assigns.action, todo_params)
   end
 
-  defp save_todo(socket, :edit, todo_params) do
-    case Lists.update_todo(socket.assigns.todo, todo_params) do
-      {:ok, _todo} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Todo updated successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+  # defp save_todo(socket, :edit, todo_params) do
+  #   case Lists.update_todo(socket.assigns.todo, todo_params) do
+  #     {:ok, _todo} ->
+  #       {:noreply,
+  #        socket
+  #        |> put_flash(:info, "Todo updated successfully")
+  #        |> push_redirect(to: socket.assigns.return_to)}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
-    end
-  end
+  #     {:error, %Ecto.Changeset{} = changeset} ->
+  #       {:noreply, assign(socket, :changeset, changeset)}
+  #   end
+  # end
 
   defp save_todo(socket, :new, todo_params) do
     case Lists.create_todo(todo_params) do

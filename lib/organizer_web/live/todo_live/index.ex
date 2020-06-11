@@ -12,6 +12,7 @@ defmodule OrganizerWeb.TodoLive.Index do
       |> assign(:todos, list_todos(list_id))
       |> assign(:list_id, list_id)
       |> assign(:user, get_user(list_id))
+    if connected?(socket), do: Process.send_after(self(), :clear_flash, 3000)
     {:ok, socket}
   end
 
@@ -28,6 +29,7 @@ defmodule OrganizerWeb.TodoLive.Index do
 
   @impl true
   def handle_params(params, _url, socket) do
+    IO.inspect(self(), label: "handle params")
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
@@ -109,6 +111,10 @@ defmodule OrganizerWeb.TodoLive.Index do
     
 
     {:noreply, socket}
+  end
+
+  def handle_info(:clear_flash, socket) do
+    {:noreply, clear_flash(socket)}
   end
 
   defp list_todos do
