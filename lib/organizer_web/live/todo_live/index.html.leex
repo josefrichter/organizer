@@ -39,8 +39,6 @@
         </div>
         <div style="flex:10;"><h3 style="display: inline;"><%= todo.text %></h3></div>
         <div style="flex:1;">
-          <span><%#= live_redirect "Show", to: Routes.todo_show_path(@socket, :show, todo.list_id, todo) %></span>
-          <span><%#= live_patch "Edit", to: Routes.todo_index_path(@socket, :edit, todo.list_id, todo) %></span>
           <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: todo.id, phx_value_listid: todo.list_id, data: [confirm: "Are you sure?"] %></span>
         </div>
       </div>
@@ -51,7 +49,7 @@
 <span><%= live_patch "New Todo", to: Routes.todo_index_path(@socket, :new, @list_id) %></span>
 <br/><br/>
 <%= if @user && @user.id do %> 
-  <span>Notify someone when all completed: <%= @user.email %> <%= live_patch "Edit", to: Routes.todo_index_path(@socket, :edit_user, @list_id, @user.id) %></span>
+  <span>Notify when all completed: <span class="email"><%= @user.email %></span> <%= live_patch "Edit", to: Routes.todo_index_path(@socket, :edit_user, @list_id, @user.id) %></span>
 <% else %>
-  <span>Notify someone when all completed <%= live_patch "Add email", to: Routes.todo_index_path(@socket, :add_user, @list_id) %></span>
+  <span>Notify when all completed <%= live_patch "Add email", to: Routes.todo_index_path(@socket, :add_user, @list_id) %></span>
 <% end %>
