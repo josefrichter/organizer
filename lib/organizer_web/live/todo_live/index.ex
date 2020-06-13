@@ -6,17 +6,29 @@ defmodule OrganizerWeb.TodoLive.Index do
   alias Organizer.Lists.User
 
   @impl true
+  @doc"""
+  Mount function for "/any-new-slug"
+  Will assign all todos for given slug
+  Will assign user email for given slug, if any
+  """
   def mount(%{"list_id" => list_id}, _session, socket) do
     socket = 
       socket 
       |> assign(:todos, list_todos(list_id))
-      |> assign(:list_id, list_id)
       |> assign(:user, get_user(list_id))
+      |> assign(:list_id, list_id)
+    # clearing whichever flash message, after 3 seconds
     if connected?(socket), do: Process.send_after(self(), :clear_flash, 3000)
+    # temporary assign for push_patch, 
+    # not sure if needed when phx-update="replace" in the template
+    # {:ok, socket, temporary_assigns: [todos: []]} 
     {:ok, socket}
   end
 
-  # match no slug -> create one
+  @doc"""
+  When "/" is reached, a new random slug is generated
+  followed by redirect to "/the-new-slug"
+  """
   def mount(%{}, _session, socket) do
     new_list_id = MnemonicSlugs.generate_slug(3)
     socket = 
@@ -33,18 +45,25 @@ defmodule OrganizerWeb.TodoLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
-    socket
-    |> assign(:page_title, "Edit Todo")
-    |> assign(:todo, Lists.get_todo!(id))
-  end
+  # defp apply_action(socket, :edit, %{"id" => id}) do
+  #   socket
+  #   |> assign(:page_title, "Edit Todo")
+  #   |> assign(:todo, Lists.get_todo!(id))
+  # end
 
+  @doc"""
+  Prepare socket for creating new Todo
+  """
   defp apply_action(socket, :new, %{"list_id" => list_id} = params) do
     socket
     |> assign(:page_title, "New Todo")
+    # create empty Todo, pre-filled with list_id (hidden field in form)
     |> assign(:todo, %Todo{list_id: list_id})
   end
 
+  @doc"""
+  Adding user (email) to be notified when list_id is complete
+  """
   defp apply_action(socket, :add_user, %{"list_id" => list_id} = params) do
     socket
     |> assign(:page_title, "Add User")
@@ -52,18 +71,25 @@ defmodule OrganizerWeb.TodoLive.Index do
     |> assign(:list_id, list_id)
   end
 
+  @doc"""
+  Changing user (email) to be notified when list_id is complete
+  """
   defp apply_action(socket, :edit_user, %{"id" => id} = params) do
-    IO.inspect id
+    # IO.inspect id
     IO.inspect Lists.get_user!(id)
     socket
     |> assign(:page_title, "Edit User")
     |> assign(:user, Lists.get_user!(id))
   end
 
-  defp apply_action(socket, :index, _params) do
+  @doc"""
+  Listing all todos
+  """
+  defp apply_action(socket, :index, %{"list_id" => list_id} = params) do
     socket
     |> assign(:page_title, "Listing Todos")
-    |> assign(:todo, nil)
+    |> assign(:todo, nil) # clear for the form
+    |> assign(:todos, list_todos(list_id)) # TODO should this be here??
   end
 
   @impl true

@@ -43,10 +43,13 @@ defmodule OrganizerWeb.TodoLive.FormComponent do
   defp save_todo(socket, :new, todo_params) do
     case Lists.create_todo(todo_params) do
       {:ok, _todo} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Todo created successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+        socket = 
+          socket
+          # |> put_flash(:info, "Todo created successfully")
+          # add just the new todo, but not sure whether it makes sense with phx-update="replace"
+          # |> assign(:todos, todo) 
+          |> push_patch(to: socket.assigns.return_to)
+        {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

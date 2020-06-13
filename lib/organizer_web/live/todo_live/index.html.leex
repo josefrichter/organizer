@@ -21,7 +21,8 @@
     %>
 <% end %>
 
-  <div id="todos" style="display:flex-column;">
+  <%# what's the point of phx-update="replace" actually? %>
+  <div id="todos" phx-update="replace" style="display:flex-column;">
     <%= for todo <- @todos do %>
       <div id="todo-<%= todo.id %>" style="display:flex;flex-direction:row;justify-content:space-between;align-items:baseline;">
         <div style="flex:1; padding: 0 15px 0 5px">
