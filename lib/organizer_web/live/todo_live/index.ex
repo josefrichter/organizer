@@ -72,7 +72,14 @@ defmodule OrganizerWeb.TodoLive.Index do
     todo = Lists.get_todo!(id)
     {:ok, _} = Lists.delete_todo(todo)
 
-    {:noreply, assign(socket, :todos, list_todos(list_id))}
+    socket = 
+      socket
+      # |> put_flash(:info, "Todo \"#{todo.text}\" deleted") # does this flash make sense?
+      |> assign(:todos, list_todos(list_id))
+      # |> check_if_list_complete # not sure this is the best idea either
+
+    # {:noreply, push_redirect(socket, to: "/#{list_id}")}
+    {:noreply, socket}
   end
 
   def handle_event("toggle", %{"id" => id, "list_id" => list_id} = params, socket) do
@@ -87,8 +94,15 @@ defmodule OrganizerWeb.TodoLive.Index do
           socket 
           |> put_flash(:error, "Error: #{changeset.errors}")
       end
+    
+    socket = check_if_list_complete(socket)
 
+    {:noreply, socket}
+  end
+
+  defp check_if_list_complete(socket) do
     IO.puts "Checking if all tasks completed..."
+    socket =
     if (socket.assigns.user && list_completed?(socket.assigns.list_id)) do
       email = socket.assigns.user.email
       list_id = socket.assigns.list_id
@@ -104,7 +118,7 @@ defmodule OrganizerWeb.TodoLive.Index do
       socket
     end 
 
-    {:noreply, socket}
+    socket
   end
 
   defp send_completion_notification(email, list_id) do
