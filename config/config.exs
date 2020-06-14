@@ -32,6 +32,6 @@ import_config "#{Mix.env()}.exs"
 
 config :mailjex,
   api_base: "https://api.mailjet.com/v3",
-  public_api_key: System.get_env("MAILJET_PUBLIC_API_KEY"), 
+  public_api_key: System.get_env("MAILJET_PUBLIC_API_KEY"),
   private_api_key: System.get_env("MAILJET_PRIVATE_API_KEY"),
   development_mode: false

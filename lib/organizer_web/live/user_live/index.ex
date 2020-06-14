@@ -6,9 +6,8 @@ defmodule OrganizerWeb.UserLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    IO.inspect socket
-    socket =
-      assign(socket, :users, list_users())
+    IO.inspect(socket)
+    socket = assign(socket, :users, list_users())
     {:ok, socket}
   end
 

@@ -6,6 +6,7 @@
     title: @page_title,
     action: @live_action,
     todo: @todo,
+    list_id: @list_id,
     return_to: Routes.todo_index_path(@socket, :index, @list_id) %>
 <% end %>
 
@@ -16,8 +17,8 @@
     action: @live_action,
     user: @user,
     list_id: @list_id,
-    return_to: Routes.todo_index_path(@socket, :index, @list_id) 
-    # return_to: Routes.user_index_path(@socket, :index) 
+    return_to: Routes.todo_index_path(@socket, :index, @list_id)
+    # return_to: Routes.user_index_path(@socket, :index)
     %>
 <% end %>
 
@@ -28,12 +29,12 @@
         <div style="flex:1; padding: 0 15px 0 5px">
           <input type="hidden" name="todo[done]" value="<%= todo.done %>" />
           <input type="checkbox"
-            style="transform: scale(1.75);" 
+            style="transform: scale(1.75);"
             phx-click="toggle"
             phx-value-id="<%= todo.id %>"
             phx-value-list_id="<%= todo.list_id %>"
             id="todo_done"
-            name="todo[done]" 
+            name="todo[done]"
             value="<%= todo.done %>"
            <%= if todo.done, do: "checked" %>/>
            &nbsp;
@@ -49,7 +50,7 @@
 <br/>
 <span><%= live_patch "New Todo", to: Routes.todo_index_path(@socket, :new, @list_id) %></span>
 <br/><br/>
-<%= if @user && @user.id do %> 
+<%= if @user && @user.id do %>
   <span>Notify when all completed: <span class="email"><%= @user.email %></span> <%= live_patch "Edit", to: Routes.todo_index_path(@socket, :edit_user, @list_id, @user.id) %></span>
 <% else %>
   <span>Notify when all completed <%= live_patch "Add email", to: Routes.todo_index_path(@socket, :add_user, @list_id) %></span>
