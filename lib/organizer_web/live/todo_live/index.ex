@@ -16,7 +16,7 @@ defmodule OrganizerWeb.TodoLive.Index do
 
     socket =
       socket
-      |> assign(:todos, list_todos(list_id))
+      # |> assign(:todos, list_todos(list_id))
       |> assign(:user, get_user(list_id))
       |> assign(:list_id, list_id)
 
@@ -83,10 +83,8 @@ defmodule OrganizerWeb.TodoLive.Index do
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Todos")
-    # clear for the form
     |> assign(:todo, nil)
-    # TODO should this be here??
-    |> assign(:todos, list_todos(socket.assigns.list_id))
+    |> assign(:todos, list_todos(socket.assigns.list_id)) # need this here rather than in mount, because of push_patch
   end
 
   @impl true

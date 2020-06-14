@@ -48,7 +48,7 @@ defmodule OrganizerWeb.TodoLive.FormComponent do
         socket =
           socket
           |> put_flash(:info, "Todo created successfully")
-          |> push_redirect(to: socket.assigns.return_to)
+          |> push_patch(to: socket.assigns.return_to)
 
         {:noreply, socket}
 
