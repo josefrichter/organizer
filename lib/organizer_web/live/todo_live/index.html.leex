@@ -40,7 +40,7 @@
         </div>
         <div style="flex:10;"><h3 style="display: inline;"><%= todo.text %></h3></div>
         <div style="flex:1;">
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: todo.id, phx_value_listid: todo.list_id, data: [confirm: "Are you sure?"] %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: todo.id, data: [confirm: "Are you sure?"] %></span>
         </div>
       </div>
     <% end %>
