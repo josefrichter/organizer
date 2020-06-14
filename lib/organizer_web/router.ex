@@ -43,7 +43,8 @@ defmodule OrganizerWeb.Router do
 
     # live "/", PageLive, :index
 
-    live "/", TodoLive.Index, :index # no slug -> create
+    # no slug -> create
+    live "/", TodoLive.Index, :index
 
     live "/:list_id/", TodoLive.Index, :index
 
@@ -55,12 +56,10 @@ defmodule OrganizerWeb.Router do
 
     live "/:list_id/todos/:id", TodoLive.Show, :show
     live "/:list_id/todos/:id/show/edit", TodoLive.Show, :edit
-
   end
 
   # Other scopes may use custom stacks.
   # scope "/api", OrganizerWeb do
   #   pipe_through :api
   # end
-
 end

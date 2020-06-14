@@ -80,6 +80,4 @@ defmodule OrganizerWeb.UserLive.FormComponent do
         {:noreply, assign(socket, :changeset, changeset)}
     end
   end
-
-
 end

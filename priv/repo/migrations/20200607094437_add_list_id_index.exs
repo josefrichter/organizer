@@ -4,5 +4,4 @@ defmodule Organizer.Repo.Migrations.AddListIdIndex do
   def change do
     create index("todos", [:list_id])
   end
-  
 end

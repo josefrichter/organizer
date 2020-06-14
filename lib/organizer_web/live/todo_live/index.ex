@@ -6,25 +6,27 @@ defmodule OrganizerWeb.TodoLive.Index do
   alias Organizer.Lists.User
 
   @impl true
-  @doc"""
+  @doc """
   Mount function for "/any-new-slug"
   Will assign all todos for given slug
   Will assign user email for given slug, if any
   """
   def mount(%{"list_id" => list_id}, _session, socket) do
     if connected?(socket), do: subscribe(list_id)
-    socket = 
-      socket 
+
+    socket =
+      socket
       |> assign(:todos, list_todos(list_id))
       |> assign(:user, get_user(list_id))
       |> assign(:list_id, list_id)
+
     # clearing whichever flash message, after 3 seconds
     if connected?(socket), do: Process.send_after(self(), :clear_flash, 3000)
     {:ok, socket}
   end
 
   # TODO move this mount into router redirect?
-  @doc"""
+  @doc """
   When "/" is reached, a new random slug is generated
   followed by redirect to "/the-new-slug"
   TODO shouldn't this happen already in router?
@@ -46,7 +48,7 @@ defmodule OrganizerWeb.TodoLive.Index do
   #   |> assign(:todo, Lists.get_todo!(id))
   # end
 
-  @doc"""
+  @doc """
   Prepare socket for creating new Todo
   """
   defp apply_action(socket, :new, _params) do
@@ -56,7 +58,7 @@ defmodule OrganizerWeb.TodoLive.Index do
     |> assign(:todo, %Todo{list_id: socket.assigns.list_id})
   end
 
-  @doc"""
+  @doc """
   Adding user (email) to be notified when list_id is complete
   """
   defp apply_action(socket, :add_user, _params) do
@@ -66,7 +68,7 @@ defmodule OrganizerWeb.TodoLive.Index do
     |> assign(:list_id, socket.assigns.list_id)
   end
 
-  @doc"""
+  @doc """
   Changing user (email) to be notified when list_id is complete
   """
   defp apply_action(socket, :edit_user, %{"id" => id} = params) do
@@ -75,26 +77,30 @@ defmodule OrganizerWeb.TodoLive.Index do
     |> assign(:user, Lists.get_user!(id))
   end
 
-  @doc"""
+  @doc """
   Listing all todos
   """
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Todos")
-    |> assign(:todo, nil) # clear for the form
-    |> assign(:todos, list_todos(socket.assigns.list_id)) # TODO should this be here??
+    # clear for the form
+    |> assign(:todo, nil)
+    # TODO should this be here??
+    |> assign(:todos, list_todos(socket.assigns.list_id))
   end
 
   @impl true
   def handle_event("delete", %{"id" => id} = params, socket) do
     todo = Lists.get_todo!(id)
     {:ok, _} = Lists.delete_todo(todo)
-    broadcast(socket.assigns.list_id, nil, :todo_change) 
-    socket = 
+    broadcast(socket.assigns.list_id, nil, :todo_change)
+
+    socket =
       socket
       # |> put_flash(:info, "Todo \"#{todo.text}\" deleted") # does this flash make sense?
       |> assign(:todos, list_todos(socket.assigns.list_id))
-      # |> check_if_list_complete # not sure this is the best idea either
+
+    # |> check_if_list_complete # not sure this is the best idea either
 
     # {:noreply, push_redirect(socket, to: "/#{list_id}")}
     {:noreply, socket}
@@ -102,47 +108,49 @@ defmodule OrganizerWeb.TodoLive.Index do
 
   def handle_event("toggle", %{"id" => id} = params, socket) do
     todo = Lists.get_todo!(id)
-    update_response = 
-      Lists.update_todo(todo, %{done: !todo.done})
+    update_response = Lists.update_todo(todo, %{done: !todo.done})
+
     socket =
       case update_response do
         {:ok, todo} ->
-          broadcast(socket.assigns.list_id, todo, :todo_change) 
+          broadcast(socket.assigns.list_id, todo, :todo_change)
           socket = assign(socket, :todos, list_todos(socket.assigns.list_id))
+
         {:error, changeset} ->
-          socket 
+          socket
           |> put_flash(:error, "Error: #{changeset.errors}")
       end
-    
+
     socket = check_if_list_complete(socket)
 
     {:noreply, socket}
   end
 
   defp check_if_list_complete(socket) do
-    IO.puts "Checking if all tasks completed..."
+    IO.puts("Checking if all tasks completed...")
+
     socket =
-    if (socket.assigns.user && list_completed?(socket.assigns.list_id)) do
-      email = socket.assigns.user.email
-      list_id = socket.assigns.list_id
+      if socket.assigns.user && list_completed?(socket.assigns.list_id) do
+        email = socket.assigns.user.email
+        list_id = socket.assigns.list_id
 
-      send_completion_notification(email, list_id)
+        send_completion_notification(email, list_id)
 
-      IO.puts "All tasks complete!"
+        IO.puts("All tasks complete!")
 
-      put_flash(socket, :info, "All tasks complete! Sending notification to #{email}...")
-    else
-      IO.puts "Nope, either no user, or list not complete yet..."
+        put_flash(socket, :info, "All tasks complete! Sending notification to #{email}...")
+      else
+        IO.puts("Nope, either no user, or list not complete yet...")
 
-      socket
-    end 
+        socket
+      end
 
     socket
   end
 
   defp send_completion_notification(email, list_id) do
     Task.Supervisor.start_child(Organizer.TaskSupervisor, fn ->
-      IO.puts "Sending to #{email} from within a Task"
+      IO.puts("Sending to #{email} from within a Task")
       list_url = "https://organizer.gigalixirapp.com/#{list_id}"
       Organizer.Mailer.send_completion_notification(email, list_url)
     end)
@@ -166,7 +174,8 @@ defmodule OrganizerWeb.TodoLive.Index do
 
   defp list_completed?(list_id) do
     Lists.list_todos(list_id)
-    |> Enum.all?(&(&1.done)) # checks if all true https://hexdocs.pm/elixir/Enum.html#all?/2
+    # checks if all true https://hexdocs.pm/elixir/Enum.html#all?/2
+    |> Enum.all?(& &1.done)
   end
 
   def subscribe(list_id) do
@@ -181,5 +190,4 @@ defmodule OrganizerWeb.TodoLive.Index do
   def handle_info({todo, :todo_change}, socket) do
     {:noreply, assign(socket, :todos, list_todos(socket.assigns.list_id))}
   end
-
 end

@@ -19,7 +19,7 @@ defmodule Organizer.Lists do
 
   """
   def list_todos do
-    Todo |> order_by(asc: :inserted_at) |> Repo.all
+    Todo |> order_by(asc: :inserted_at) |> Repo.all()
   end
 
   @doc """
@@ -32,10 +32,12 @@ defmodule Organizer.Lists do
 
   """
   def list_todos(list_id) do
-    query = from t in Todo,
-      where: t.list_id == ^list_id,
-      order_by: [asc: t.inserted_at],
-      select: t
+    query =
+      from t in Todo,
+        where: t.list_id == ^list_id,
+        order_by: [asc: t.inserted_at],
+        select: t
+
     Repo.all(query)
   end
 
@@ -165,12 +167,15 @@ defmodule Organizer.Lists do
       ** (Ecto.NoResultsError)
 
   """
-  
+
   def get_user_by_list_id(list_id) do
-    query = from u in User, 
-      where: u.list_id == ^list_id, 
-      select: u
-    Repo.one(query) # just first match, to keep it simple
+    query =
+      from u in User,
+        where: u.list_id == ^list_id,
+        select: u
+
+    # just first match, to keep it simple
+    Repo.one(query)
   end
 
   @doc """
