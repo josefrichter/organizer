@@ -20,8 +20,6 @@ defmodule OrganizerWeb.TodoLive.Index do
       |> assign(:user, get_user(list_id))
       |> assign(:list_id, list_id)
 
-    # clearing whichever flash message, after 3 seconds
-    if connected?(socket), do: Process.send_after(self(), :clear_flash, 3000)
     {:ok, socket}
   end
 
@@ -84,7 +82,8 @@ defmodule OrganizerWeb.TodoLive.Index do
     socket
     |> assign(:page_title, "Listing Todos")
     |> assign(:todo, nil)
-    |> assign(:todos, list_todos(socket.assigns.list_id)) # need this here rather than in mount, because of push_patch
+    # need this here rather than in mount, because of push_patch
+    |> assign(:todos, list_todos(socket.assigns.list_id))
   end
 
   @impl true

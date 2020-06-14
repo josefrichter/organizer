@@ -1,11 +1,17 @@
 <main role="main" class="container">
-  <p class="alert alert-info animated fade-out" role="alert"
-    phx-click="lv:clear-flash"
-    phx-value-key="info"><%= live_flash(@flash, :info) %></p>
+  <%= if message = live_flash(@flash, :info) do %>
+    <p class="alert alert-info animated fade-out" role="alert"
+      phx-hook="FlashCountdown"
+      phx-click="lv:clear-flash"
+      phx-value-key="info"><%= message %></p>
+  <% end %>
 
-  <p class="alert alert-danger animated fade-out" role="alert"
-    phx-click="lv:clear-flash"
-    phx-value-key="error"><%= live_flash(@flash, :error) %></p>
+  <%= if message = live_flash(@flash, :error) do %>
+    <p class="alert alert-danger animated fade-out" role="alert"
+      phx-hook="FlashCountdown"
+      phx-click="lv:clear-flash"
+      phx-value-key="error"><%= message %></p>
+  <% end %>
 
   <%= @inner_content %>
 </main>
