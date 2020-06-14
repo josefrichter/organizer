@@ -47,10 +47,8 @@ defmodule OrganizerWeb.TodoLive.FormComponent do
 
         socket =
           socket
-          # |> put_flash(:info, "Todo created successfully")
-          # add just the new todo, but not sure whether it makes sense with phx-update="replace"
-          |> assign(:todos, todo)
-          |> push_patch(to: socket.assigns.return_to)
+          |> put_flash(:info, "Todo created successfully")
+          |> push_redirect(to: socket.assigns.return_to)
 
         {:noreply, socket}
 
