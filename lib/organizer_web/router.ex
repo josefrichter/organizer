@@ -56,6 +56,7 @@ defmodule OrganizerWeb.Router do
 
     live "/:list_id/todos/:id", TodoLive.Show, :show
     live "/:list_id/todos/:id/show/edit", TodoLive.Show, :edit
+
   end
 
   # Other scopes may use custom stacks.

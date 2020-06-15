@@ -1,4 +1,4 @@
-<h1>Listing Todos</h1>
+<h1>Checklist</h1>
 
 <%= if @live_action in [:new, :edit] do %>
   <%= live_modal @socket, OrganizerWeb.TodoLive.FormComponent,
@@ -55,3 +55,11 @@
 <% else %>
   <span>Notify when all completed <%= live_patch "Add email", to: Routes.todo_index_path(@socket, :add_user, @list_id) %></span>
 <% end %>
+
+<br/><br/>
+<h4>Popular templates:</h4>
+<%= link "Default", to: "#", phx_click: "prefill", phx_value_template: "default" %><br/>
+<%= link "Panther", to: "#", phx_click: "prefill", phx_value_template: "panther" %>
+
+<br/><br/>
+<%= link "Clear list", to: "#", class: "danger", phx_click: "delete_all", data: [confirm: "This will delete all your todos. Are you sure?"] %>

@@ -19,6 +19,7 @@ defmodule OrganizerWeb.TodoLive.Index do
       # |> assign(:todos, list_todos(list_id))
       |> assign(:user, get_user(list_id))
       |> assign(:list_id, list_id)
+      # |> prefill("default")
 
     # clearing whichever flash message, after 3 seconds
     if connected?(socket), do: Process.send_after(self(), :clear_flash, 3000)
@@ -88,6 +89,19 @@ defmodule OrganizerWeb.TodoLive.Index do
   end
 
   @impl true
+  def handle_event("prefill", %{"template" => template} = params, socket) do
+    
+    broadcast(socket.assigns.list_id, nil, :todo_change)
+
+    socket
+      |> prefill(template)
+      |> assign(:todos, list_todos(socket.assigns.list_id))
+
+    # {:noreply, push_redirect(socket, to: "/#{list_id}")}
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_event("delete", %{"id" => id} = params, socket) do
     todo = Lists.get_todo!(id)
     {:ok, _} = Lists.delete_todo(todo)
@@ -101,6 +115,18 @@ defmodule OrganizerWeb.TodoLive.Index do
     # |> check_if_list_complete # not sure this is the best idea either
 
     # {:noreply, push_redirect(socket, to: "/#{list_id}")}
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("delete_all", _params, socket) do
+    for todo <- socket.assigns.todos do
+      # todo = Lists.get_todo!(id)
+      {:ok, _} = Lists.delete_todo(todo)
+
+      {:noreply, socket}
+    end
+    broadcast(socket.assigns.list_id, nil, :todo_change)
     {:noreply, socket}
   end
 
@@ -188,4 +214,24 @@ defmodule OrganizerWeb.TodoLive.Index do
   def handle_info({todo, :todo_change}, socket) do
     {:noreply, assign(socket, :todos, list_todos(socket.assigns.list_id))}
   end
+
+  defp prefill(socket, template) do
+    tasks = Organizer.ReadyMadeLists.get_template_tasks(template)
+    
+    for task_text <- tasks do
+      task = %{list_id: socket.assigns.list_id, text: task_text}
+      case Lists.create_todo(task) do
+          {:ok, todo} ->
+      
+              {:noreply, socket}
+      
+          {:error, %Ecto.Changeset{} = changeset} ->
+              {:noreply, assign(socket, changeset: changeset)}
+      end
+      socket
+    end
+    socket
+  end
+
+
 end

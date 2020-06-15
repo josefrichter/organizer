@@ -35,7 +35,7 @@ defmodule Organizer.Lists do
     query =
       from t in Todo,
         where: t.list_id == ^list_id,
-        order_by: [asc: t.inserted_at],
+        order_by: [asc: t.inserted_at, asc: t.id],
         select: t
 
     Repo.all(query)
