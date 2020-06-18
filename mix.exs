@@ -48,7 +48,8 @@ defmodule Organizer.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.0"},
       {:mnemonic_slugs, "~> 0.0.3"},
-      {:mailjex, "~> 0.2.6"}
+      {:mailjex, "~> 0.2.6"},
+      {:credo, "~> 1.4", only: [:dev, :test], runtime: false}
     ]
   end
 
